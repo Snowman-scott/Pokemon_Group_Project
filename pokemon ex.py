@@ -393,6 +393,18 @@ def main():
         print(f"\nCongratulations, {winner.name} wins the battle!")
     else:
         print("\nThe battle is a draw!")
+# play agian option
+def play_again():
+    print("do you wanrt to play again ")
+    while True:
+        choice = input("\n do you want to play agian? (yes/no):") . lower(). strip()
+        if choice in ['yes','y']:
+            return True
+        elif choice in ['no','n']:
+            return False
+        else:
+            print("invalidinput. please enter 'yes or no'.")
 
+    
 if __name__ == "__main__":
     main()
