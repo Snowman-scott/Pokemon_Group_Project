@@ -1,0 +1,215 @@
+import random
+from typing import List, Optional
+class Move:
+# represents a pokemon move with PP tracking
+    def init(self, name: str, move_type: str, category: str, power: int, accuracy: int, max_pp: int):
+        self.name = name
+        self.type = move_type
+        self.category = category  # physical, special, or status
+        self.power = power
+        self.accuracy = accuracy
+        self.max_pp = max_pp
+        self.current_pp = max_pp
+        self.pp_ups_used = 0
+def use(self) -> bool:
+    # use the move, reducing PP by 1. returns True if successful.
+    if self.current_pp > 0:
+        self.current_pp -= 1
+        return True
+    return False
+
+def restore(self, amount: int = None):
+    # restore PP. if amount is None, fully restore.
+    if amount is None:
+        self.current_pp = self.max_pp
+    else:
+        self.current_pp = min(self.current_pp + amount, self.max_pp)
+
+def __str__(self):
+    return f"{self.name} ({self.category}) - {self.current_pp}/{self.max_pp} PP"
+class Pokemon:
+# represents a pokemon with moves
+    def init(self, name: str, types: dict, moves: List[Move], hp: int = 100):
+        self.name = name
+        self.type1 = types.get("type1", "")
+        self.type2 = types.get("type2", "")
+        self.moves = moves[:4]  # max 4 moves
+        self.hp = hp
+        self.max_hp = hp
+def select_move(self, move_index: int) -> Optional[Move]:
+    # select a move by index (0-3)
+    if 0 <= move_index < len(self.moves):
+        return self.moves[move_index]
+    return None
+
+def use_move(self, move_index: int, target) -> tuple[bool, str, int]:
+    # attempt to use a move against target. 
+    # returns (success, message, damage_dealt).
+    
+    move = self.select_move(move_index)
+    
+    if move is None:
+        return False, "Invalid move selection!", 0
+    
+    if move.current_pp == 0:
+        return False, f"{move.name} has no PP left!", 0
+    
+    # use the move
+    move.use()
+    
+    # sim accuracy check
+    hit = random.randint(1, 100) <= move.accuracy
+    
+    if not hit:
+        return True, f"{self.name} used {move.name}, but it missed!", 0
+    
+    # calc damage
+    damage = 0
+    if move.power > 0:
+        # basic damage calculation
+        damage = int(move.power * random.uniform(0.85, 1.0))
+        target.hp = max(0, target.hp - damage)
+        return True, f"{self.name} used {move.name}! Dealt {damage} damage!", damage
+    else:
+        # status move
+        return True, f"{self.name} used {move.name}!", 0
+
+def struggle(self, target) -> tuple[str, int]:
+    # use struggle when all moves are out of PP
+    recoil = self.max_hp // 4
+    self.hp = max(0, self.hp - recoil)
+    damage = 50
+    target.hp = max(0, target.hp - damage)
+    return f"{self.name} used Struggle! Dealt {damage} damage but took {recoil} recoil damage!", damage
+
+def all_moves_depleted(self) -> bool:
+    # check if all moves have 0 PP
+    return all(move.current_pp == 0 for move in self.moves)
+
+def heal_at_center(self):
+    # fully restore all PP and HP
+    for move in self.moves:
+        move.restore()
+    self.hp = self.max_hp
+
+def display_moves(self):
+    # display all moves with their current PP
+    print(f"\n{self.name}'s Moves:")
+    for i, move in enumerate(self.moves):
+        print(f"  {i+1}. {move}")
+
+def is_alive(self) -> bool:
+    # check if Pokémon can still battle
+    return self.hp > 0
+
+MOVE_DATABASE = {
+# pikachu's moves
+"Thunder Shock": Move("Thunder Shock", "Electric", "Special", 40, 100, 30),
+"Quick Attack": Move("Quick Attack", "Normal", "Physical", 40, 100, 30),
+"Thunderbolt": Move("Thunderbolt", "Electric", "Special", 90, 100, 15),
+"Slam": Move("Slam", "Normal", "Physical", 80, 75, 20),
+# blastoise's moves
+"Skull Bash": Move("Skull Bash", "Normal", "Physical", 130, 100, 10),
+"Hydro Pump": Move("Hydro Pump", "Water", "Special", 110, 80, 5),
+"Bite": Move("Bite", "Dark", "Physical", 60, 100, 25),
+"Earthquake": Move("Earthquake", "Ground", "Physical", 100, 100, 10),
+# bulbasaur's moves
+"Poison Powder": Move("Poison Powder", "Poison", "Status", 0, 75, 35),
+"Solar Beam": Move("Solar Beam", "Grass", "Special", 120, 100, 10),
+"Vine Whip": Move("Vine Whip", "Grass", "Physical", 45, 100, 25),
+"Razor Leaf": Move("Razor Leaf", "Grass", "Physical", 55, 95, 25),
+# hauntly's moves
+"Dream Eater": Move("Dream Eater", "Psychic", "Special", 100, 100, 15),
+"Lick": Move("Lick", "Ghost", "Physical", 30, 100, 30),
+"Confuse Ray": Move("Confuse Ray", "Ghost", "Status", 0, 100, 10),
+"Mimic": Move("Mimic", "Normal", "Status", 0, 100, 10),
+# squirtle's moves
+"Dig": Move("Dig", "Ground", "Physical", 80, 100, 10),
+"Mega Punch": Move("Mega Punch", "Normal", "Physical", 80, 85, 20),
+"Withdraw": Move("Withdraw", "Water", "Status", 0, 100, 40),
+"Bubble": Move("Bubble", "Water", "Special", 40, 100, 30),
+# ponyta's moves
+"Agility": Move("Agility", "Psychic", "Status", 0, 100, 30),
+"Take Down": Move("Take Down", "Normal", "Physical", 90, 85, 20),
+"Stomp": Move("Stomp", "Normal", "Physical", 65, 100, 20),
+"Fire Spin": Move("Fire Spin", "Fire", "Special", 35, 85, 15),
+}
+pokemonsDex = [
+{"Pikachu": {"number": "1", "type1": "electric", "type2": ""}},
+{"Blastoise": {"number": "2", "type1": "water", "type2": ""}},
+{"Bulbasaur": {"number": "3", "type1": "grass", "type2": "poison"}},
+{"Hauntly": {"number": "4", "type1": "ghost", "type2": "poison"}},
+{"Squirtle": {"number": "5", "type1": "water", "type2": ""}},
+{"Ponyta": {"number": "6", "type1": "fire", "type2": ""}},
+]
+POKEMON_MOVESETS = {
+"Pikachu": ["Thunder Shock", "Quick Attack", "Thunderbolt", "Slam"],
+"Blastoise": ["Skull Bash", "Hydro Pump", "Bite", "Earthquake"],
+"Bulbasaur": ["Poison Powder", "Solar Beam", "Vine Whip", "Razor Leaf"],
+"Hauntly": ["Dream Eater", "Lick", "Confuse Ray", "Mimic"],
+"Squirtle": ["Dig", "Mega Punch", "Withdraw", "Bubble"],
+"Ponyta": ["Agility", "Take Down", "Stomp", "Fire Spin"],
+}
+def create_pokemon(name: str) -> Pokemon:
+# create a Pokémon with its moveset from the database
+# find types
+    types = {}
+for pokemon_dict in pokemonsDex:
+    if name in pokemon_dict:
+        types = pokemon_dict[name]
+break
+# get moveset
+moveset = POKEMON_MOVESETS.get(name, [])
+# create move instances
+moves = []
+for move_name in moveset:
+    if move_name in MOVE_DATABASE:
+        original = MOVE_DATABASE[move_name]
+        move_copy = Move(original.name, original.type, original.category,
+                       original.power, original.accuracy, original.max_pp)
+        moves.append(move_copy)
+
+return Pokemon(name, types, moves)
+def GetUserInput() -> str:
+# get valid Pokemon choice from user
+    valid_pokemon = [list(p.keys())[0] for p in pokemonsDex]
+while True:
+    playerChoice = input("Pick a Pokemon: ").strip()
+    # check if valid (case-insensitive)
+    for valid_name in valid_pokemon:
+        if playerChoice.lower() == valid_name.lower():
+            print(f"You have picked: {valid_name}")
+            return valid_name
+    
+    print("That is not a Pokemon! Try again.")
+def PokemonAttack(attacker: Pokemon, defender: Pokemon):
+# handle a Pokemon's attack turn
+    print(f"\n{attacker.name}'s HP: {attacker.hp}/{attacker.max_hp}")
+    print(f"{defender.name}'s HP: {defender.hp}/{defender.max_hp}")
+# show available moves
+attacker.display_moves()
+# check if all moves depleted
+if attacker.all_moves_depleted():
+    print(f"\n{attacker.name} has no PP left in any move!")
+    message, damage = attacker.struggle(defender)
+    print(message)
+    return
+
+# get move choice
+while True:
+    try:
+        choice = input(f"\nChoose a move (1-{len(attacker.moves)}): ").strip()
+        move_index = int(choice) - 1
+        
+        if 0 <= move_index < len(attacker.moves):
+            success, message, damage = attacker.use_move(move_index, defender)
+            print(message)
+            
+            if success or attacker.moves[move_index].current_pp == 0:
+                break
+            else:
+                print("Try another move!")
+        else:
+            print("Invalid move number!")
+    except ValueError:
+        print("Please enter a number!")
