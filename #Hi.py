@@ -99,5 +99,7 @@ while True:
         print("Thanks for playing") #18th the game ends
         break
 
+#hello
+#test Ryan
 #heyo, Hows it goiung 
 #Test Rose
