@@ -75,14 +75,27 @@ def battle(player_pokemon_name, enemy_pokemon_name):
 
     print("\n=== Battle Over ===")
 
+    while True:
+        play_again = input("Do you want to start a new battle? (y/n): ").strip().lower()
+        if play_again in ['yes','y']:
+            return True
+        elif play_again in ['no','n']:
+            return False
+        else:
+            print("Invalid input. Please enter y or n")
 
 
-print("You have entered a battle")
-player_choice = GetUserInput()
+while True:
+    print("You have entered a battle")
+    player_choice = GetUserInput()
 
-# Random enemy Pokémon that isn’t yours
-available_enemies = [list(p.keys())[0] for p in pokemonsDex if player_choice not in p]
-enemy_choice = random.choice(available_enemies)
+    # Random enemy Pokémon that isn’t yours
+    available_enemies = [list(p.keys())[0] for p in pokemonsDex if player_choice not in p]
+    enemy_choice = random.choice(available_enemies)
 
-print(f"Your opponent will be {enemy_choice}!")
-battle(player_choice, enemy_choice)
+    print(f"Your opponent will be {enemy_choice}!")
+    continue_playing = battle(player_choice, enemy_choice)
+
+    if not continue_playing:
+        print("Thanks for playing")
+        break
