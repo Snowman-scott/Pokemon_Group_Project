@@ -135,6 +135,7 @@ dex = [
   {"Haunter":{"number":"4", "type1":"ghost", "type2":"poison"}}, 
   {"Squirtle":{"number":"5", "type1":"water", "type2":""}}
 ]
+import random
  
 print("\n############################")
 print("#### POKEMON BATTLE #####")
@@ -308,8 +309,9 @@ def create_sample_data():
     squirtle = Pokemon("Squirtle", ["WATER"], 100, 10, 12, [water_gun, tackle])
     bulbasaur = Pokemon("Bulbasaur", ["GRASS"], 100, 11, 11, [vine_whip, tackle])
     pikachu = Pokemon("Pikachu", ["ELECTRIC"], 100, 13, 9, [thunder_shock, tackle])
+    Ponyta = Pokemon("Ponyta", ["ELECTRIC"], 100, 19, 13, [ember, tackle])
 
-    return [charmander, squirtle, bulbasaur, pikachu]
+    return [charmander, squirtle, bulbasaur, pikachu,Ponyta]
 
 # Function to get player's team
 def get_player_team(available_pokemon):
@@ -344,7 +346,7 @@ def main():
 
     computer_team = [p for p in available_pokemon if p not in player_team]
     if not computer_team:
-        computer_team = [any.choice(available_pokemon)]
+        computer_team = [random.choice(available_pokemon)]
     computer_trainer = Trainer("Computer", computer_team)
 
     print("\n" + "=" * 30)
@@ -370,7 +372,7 @@ def main():
             break
 
         print("\nComputer's turn...")
-        computer_move = any.choice(computer_trainer.get_active_pokemon().moves)
+        computer_move = random.choice(computer_trainer.get_active_pokemon().moves)
         battle.turn(computer_trainer.get_active_pokemon(), computer_move, player_trainer.get_active_pokemon())
 
         if not player_trainer.has_active_pokemon():
