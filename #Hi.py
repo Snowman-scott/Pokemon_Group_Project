@@ -98,8 +98,3 @@ while True:
     if not continue_playing:
         print("Thanks for playing") #18th the game ends
         break
-
-#hello
-#test Ryan
-#heyo, Hows it goiung 
-#Test Rose
